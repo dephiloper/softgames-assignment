@@ -5,15 +5,12 @@
  * left top corner and make sure, that this demo runs well on mobile devices.
  */
 
-const APP_WIDTH = 800;
-const APP_HEIGHT = 600;
 // so the fps counter is not updated very frame
 const UPDATE_FPS_COUNTER = 5;
 const SPRITE_COUNT = 144;
 const SPRITE_Y_OFFSET = 1.0;
 const STACK_POP_DURATION_MS = 1000;
 const ANIMATION_DURATION_MS = 2000;
-
 
 let type = "WebGL";
 if (!PIXI.utils.isWebGLSupported()) {
@@ -27,7 +24,14 @@ const Application = PIXI.Application,
     Text = PIXI.Text,
     Sprite = PIXI.Sprite;
 
-const app = new Application({width: APP_WIDTH, height: APP_HEIGHT, backgroundColor: 0xB4CDCD});
+const app = new Application({width: window.innerWidth, height: window.innerHeight, backgroundColor: 0xB4CDCD});
+
+// Fullscreen in pixi is resizing the renderer to be window.innerWidth by window.innerHeight
+// https://codepen.io/iamnotsam/pen/RgeOrK
+window.addEventListener("resize", function() {
+    app.renderer.resize(window.innerWidth, window.innerHeight);
+});
+
 
 document.body.appendChild(app.view);
 loader.add("res/white-card.png").load(setup);
@@ -45,13 +49,13 @@ function setup() {
     app.stage.addChild(new PIXI.display.Layer(secondStackGroup));
 
     const texture = resources["res/white-card.png"].texture;
-    const firstStackX = APP_WIDTH / 2 - texture.width * 2;
-    const secondStackX = APP_WIDTH / 2 + texture.width * 2;
+    const firstStackX = window.innerWidth / 2 - texture.width * 2;
+    const secondStackX = window.innerWidth / 2 + texture.width * 2;
 
     for (let i = 0; i < SPRITE_COUNT; i++) {
         let sprite = new Sprite(texture);
         sprite.x = firstStackX;
-        sprite.y = APP_HEIGHT / 1.5 - i * SPRITE_Y_OFFSET;
+        sprite.y = window.innerHeight / 1.5 - i * SPRITE_Y_OFFSET;
         sprite.tint = Math.random() * 0xFFFFFF;
         sprite.anchor = {x: 0.5, y: 0.5};
 
@@ -66,7 +70,7 @@ function setup() {
                 positionEnd:
                     {
                         x: secondStackX,
-                        y: APP_HEIGHT / 1.5 - (SPRITE_COUNT - 1 - i) * SPRITE_Y_OFFSET
+                        y: window.innerHeight / 1.5 - (SPRITE_COUNT - 1 - i) * SPRITE_Y_OFFSET
                     },
                 animationTime: 0.0
             });

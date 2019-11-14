@@ -20,12 +20,14 @@ const Application = PIXI.Application,
     Container = PIXI.Container,
     Sprite = PIXI.Sprite;
 
+const app = new Application({width: window.innerWidth, height: window.innerHeight, backgroundColor: 0xB4CDCD});
+
 // Fullscreen in pixi is resizing the renderer to be window.innerWidth by window.innerHeight
+// https://codepen.io/iamnotsam/pen/RgeOrK
 window.addEventListener("resize", function() {
     app.renderer.resize(window.innerWidth, window.innerHeight);
 });
 
-const app = new Application({width: window.innerWidth, height: window.innerHeight, backgroundColor: 0xB4CDCD});
 let englishWords = [];
 let emojiFileNames = [];
 
