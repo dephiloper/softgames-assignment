@@ -1,0 +1,26 @@
+{
+  "name": "softgames-assignment",
+  "version": "1.0.0",
+  "description": "Assignment for application at SOFTGAMES.",
+  "main": "test01/index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dephiloper/assignment-softgames.git"
+  },
+  "author": "Philipp Bönsch",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dephiloper/assignment-softgames/issues"
+  },
+  "homepage": "https://github.com/dephiloper/assignment-softgames#readme",
+  "dependencies": {
+    "browserify": "^16.5.0",
+    "http-server": "^0.11.1",
+    "pixi-layers": "^0.2.2",
+    "pixi.js": "^5.2.0"
+  }
+}
