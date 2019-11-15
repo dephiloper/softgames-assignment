@@ -9,7 +9,7 @@
 const UPDATE_FPS_COUNTER = 5;
 const TEXT_VISIBLE_DURATION_MS = 2000;
 
-let type = "WebGL";0xB4CDCD
+let type = "WebGL";
 if (!PIXI.utils.isWebGLSupported()) {
     type = "canvas";
 }
