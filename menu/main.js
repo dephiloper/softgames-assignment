@@ -3,19 +3,7 @@
  * @description The test is split in 3 parts which should be accessed through an in-game menu.
  */
 
-// so the fps counter is not updated very frame
-const UPDATE_FPS_COUNTER = 5;
-
-let type = "WebGL";
-if (!PIXI.utils.isWebGLSupported()) {
-    type = "canvas";
-}
-
-PIXI.utils.sayHello(type);
-
-//Aliases
-const Application = PIXI.Application,
-    Text = PIXI.Text;
+import {UPDATE_FPS_COUNTER, calculateFps, Application, Text} from "../utils.js";
 
 const app = new Application({width: window.innerWidth, height: window.innerHeight, backgroundColor: 0xB4CDCD});
 
@@ -73,7 +61,6 @@ function setup() {
 }
 
 let frameCount = 0;
-
 function gameLoop(delta) {
     frameCount++;
 
@@ -82,8 +69,4 @@ function gameLoop(delta) {
         const fps = calculateFps(delta);
         fpsCounter.text = "FPS: " + fps.toFixed(2);
     }
-}
-
-function calculateFps(delta) {
-    return 1000 / (delta / PIXI.settings.TARGET_FPMS);
 }

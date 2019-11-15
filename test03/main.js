@@ -4,22 +4,8 @@
  * sprites on screen at once). Feel free to use existing libraries how you would use them in a real project.
  */
 
-const UPDATE_FPS_COUNTER = 5;
-
-let type = "WebGL";
-if (!PIXI.utils.isWebGLSupported()) {
-    type = "canvas";
-}
-
-PIXI.utils.sayHello(type);
-
-//Aliases
-const Application = PIXI.Application,
-    loader = PIXI.Loader.shared,
-    resources = loader.resources,
-    Text = PIXI.Text,
-    Container = PIXI.Container,
-    Sprite = PIXI.Sprite;
+import {UPDATE_FPS_COUNTER, Application, Text, Sprite, Container, resources, loader, calculateFps, createBackButton}
+    from "../utils.js";
 
 const app = new Application({width: window.innerWidth, height: window.innerHeight, backgroundColor: 0x000000});
 let emitterConfig = null;
@@ -71,8 +57,6 @@ function setup() {
 }
 
 let frameCount = 0;
-
-
 let elapsed = Date.now();
 function gameLoop(delta) {
     frameCount++;
@@ -86,33 +70,4 @@ function gameLoop(delta) {
         const fps = calculateFps(delta);
         fpsCounter.text = "FPS: " + fps.toFixed(2);
     }
-}
-
-function calculateFps(delta) {
-    return 1000 / (delta / PIXI.settings.TARGET_FPMS);
-}
-
-function createBackButton(stage) {
-    const graphics = new PIXI.Graphics();
-    const backSprite = new Sprite(resources["../res/1F519.png"].texture);
-    let backButtonRadius = 30;
-    let backSpriteScale = 0.3;
-
-    if (PIXI.utils.isMobile.any && window.innerHeight > window.innerWidth) {
-        backButtonRadius *= 1.75;
-        backSpriteScale *= 1.75;
-    }
-
-    graphics.interactive = true;
-    graphics.buttonMode = true;
-    graphics.beginFill(0xadbc43, 1);
-    graphics.lineStyle(3, 0x00, 1);
-    graphics.drawCircle(window.innerWidth - backButtonRadius * 2, backButtonRadius * 2, backButtonRadius);
-    graphics.endFill();
-    graphics.on('pointerdown', () => window.location.replace("../menu"));
-    backSprite.position.set(window.innerWidth - backButtonRadius * 2, backButtonRadius * 2);
-    backSprite.scale.set(backSpriteScale, backSpriteScale);
-    backSprite.anchor.set(0.5, 0.5);
-    stage.addChild(graphics);
-    stage.addChild(backSprite);
 }
