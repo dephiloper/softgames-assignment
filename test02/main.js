@@ -6,23 +6,10 @@
  * random font size.
  */
 
-const UPDATE_FPS_COUNTER = 5;
+import {UPDATE_FPS_COUNTER, Application, Text, Sprite, Container, resources, loader, calculateFps, createBackButton}
+    from "../utils.js";
+
 const TEXT_VISIBLE_DURATION_MS = 2000;
-
-let type = "WebGL";0xB4CDCD
-if (!PIXI.utils.isWebGLSupported()) {
-    type = "canvas";
-}
-
-PIXI.utils.sayHello(type);
-
-//Aliases
-const Application = PIXI.Application,
-    loader = PIXI.Loader.shared,
-    resources = loader.resources,
-    Text = PIXI.Text,
-    Container = PIXI.Container,
-    Sprite = PIXI.Sprite;
 
 const app = new Application({width: window.innerWidth, height: window.innerHeight, backgroundColor: 0xB4CDCD});
 
@@ -50,7 +37,6 @@ fetch('res/openmoji-list.txt')
 
 let fpsCounter = new Text("FPS: ", {fontFamily: 'Arial', fontSize: 20, fill: 0xff1010});
 let container = new Container();
-
 function setup() {
     app.stage.addChild(fpsCounter);
 
@@ -66,7 +52,6 @@ function setup() {
 
 let frameCount = 0;
 let changeTextTime = 0;
-
 function gameLoop(delta) {
     frameCount++;
     changeTextTime += delta / PIXI.settings.TARGET_FPMS;
@@ -86,7 +71,6 @@ function gameLoop(delta) {
         const fps = calculateFps(delta);
         fpsCounter.text = "FPS: " + fps.toFixed(2);
     }
-
 }
 
 function textToList(text, amount) {
@@ -102,10 +86,6 @@ function textToList(text, amount) {
     }
 
     return list;
-}
-
-function calculateFps(delta) {
-    return 1000 / (delta / PIXI.settings.TARGET_FPMS);
 }
 
 function refillContainer(container, minElementCount, maxElementCount, margin) {
@@ -159,29 +139,4 @@ function randomValue(min, max, bounds) {
     min = min + bounds;
     max = max - bounds;
     return min + Math.floor(Math.random() * (max - min));
-}
-
-function createBackButton(stage) {
-    const graphics = new PIXI.Graphics();
-    const backSprite = new Sprite(resources["../res/1F519.png"].texture);
-    let backButtonRadius = 30;
-    let backSpriteScale = 0.3;
-
-    if (PIXI.utils.isMobile.any && window.innerHeight > window.innerWidth) {
-        backButtonRadius *= 1.75;
-        backSpriteScale *= 1.75;
-    }
-
-    graphics.interactive = true;
-    graphics.buttonMode = true;
-    graphics.beginFill(0xadbc43, 1);
-    graphics.lineStyle(3, 0x00, 1);
-    graphics.drawCircle(window.innerWidth - backButtonRadius * 2, backButtonRadius * 2, backButtonRadius);
-    graphics.endFill();
-    graphics.on('pointerdown', () => window.location.replace("../menu"));
-    backSprite.position.set(window.innerWidth - backButtonRadius * 2, backButtonRadius * 2);
-    backSprite.scale.set(backSpriteScale, backSpriteScale);
-    backSprite.anchor.set(0.5, 0.5);
-    stage.addChild(graphics);
-    stage.addChild(backSprite);
 }

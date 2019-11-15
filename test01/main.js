@@ -6,26 +6,13 @@
  * number of fps in left top corner and make sure, that this demo runs well on mobile devices.
  */
 
-// so the fps counter is not updated very frame
-const UPDATE_FPS_COUNTER = 5;
+import {UPDATE_FPS_COUNTER, Application, Text, Sprite, resources, loader, calculateFps, createBackButton, lerp}
+from "../utils.js";
+
 const SPRITE_COUNT = 144;
 const SPRITE_Y_OFFSET = 1.0;
 const STACK_POP_DURATION_MS = 1000;
 const ANIMATION_DURATION_MS = 2000;
-
-let type = "WebGL";
-if (!PIXI.utils.isWebGLSupported()) {
-    type = "canvas";
-}
-
-PIXI.utils.sayHello(type);
-
-//Aliases
-const Application = PIXI.Application,
-    loader = PIXI.Loader.shared,
-    resources = loader.resources,
-    Text = PIXI.Text,
-    Sprite = PIXI.Sprite;
 
 const app = new Application({width: window.innerWidth, height: window.innerHeight, backgroundColor: 0xB4CDCD});
 
@@ -35,17 +22,14 @@ window.addEventListener("resize", function () {
     app.renderer.resize(window.innerWidth, window.innerHeight);
 });
 
-
 document.body.appendChild(app.view);
 loader.add(["res/white-card.png", "../res/1F519.png"]).load(setup);
-
-let fpsCounter = new Text("FPS: ", {fontFamily: 'Arial', fontSize: 20, fill: 0xff1010});
 
 const firstStackGroup = new PIXI.display.Group(0, true);
 const secondStackGroup = new PIXI.display.Group(1, true);
 
+let fpsCounter = new Text("FPS: ", {fontFamily: 'Arial', fontSize: 20, fill: 0xff1010});
 let animationSprites = [];
-
 function setup() {
     app.stage = new PIXI.display.Stage();
     app.stage.addChild(fpsCounter);
@@ -97,7 +81,6 @@ let frameCount = 0;
 let currentSpriteIndex = 0;
 let popSpriteTime = 0;
 let activeSprites = [];
-
 function gameLoop(delta) {
     frameCount++;
     popSpriteTime += delta / PIXI.settings.TARGET_FPMS;
@@ -137,39 +120,4 @@ function gameLoop(delta) {
         const fps = calculateFps(delta);
         fpsCounter.text = "FPS: " + fps.toFixed(2);
     }
-}
-
-function calculateFps(delta) {
-    return 1000 / (delta / PIXI.settings.TARGET_FPMS);
-}
-
-function lerp(a, b, fraction) {
-    fraction = fraction < 0 ? 0 : fraction;
-    fraction = fraction > 1 ? 1 : fraction;
-    return a + (b - a) * fraction;
-}
-
-function createBackButton(stage) {
-    const graphics = new PIXI.Graphics();
-    const backSprite = new Sprite(resources["../res/1F519.png"].texture);
-    let backButtonRadius = 30;
-    let backSpriteScale = 0.3;
-
-    if (PIXI.utils.isMobile.any && window.innerHeight > window.innerWidth) {
-        backButtonRadius *= 1.75;
-        backSpriteScale *= 1.75;
-    }
-
-    graphics.interactive = true;
-    graphics.buttonMode = true;
-    graphics.beginFill(0xadbc43, 1);
-    graphics.lineStyle(3, 0x00, 1);
-    graphics.drawCircle(window.innerWidth - backButtonRadius * 2, backButtonRadius * 2, backButtonRadius);
-    graphics.endFill();
-    graphics.on('pointerdown', () => window.location.replace("../menu"));
-    backSprite.position.set(window.innerWidth - backButtonRadius * 2, backButtonRadius * 2);
-    backSprite.scale.set(backSpriteScale, backSpriteScale);
-    backSprite.anchor.set(0.5, 0.5);
-    stage.addChild(graphics);
-    stage.addChild(backSprite);
 }
