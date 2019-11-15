@@ -31,13 +31,13 @@ const app = new Application({width: window.innerWidth, height: window.innerHeigh
 
 // Fullscreen in pixi is resizing the renderer to be window.innerWidth by window.innerHeight
 // https://codepen.io/iamnotsam/pen/RgeOrK
-window.addEventListener("resize", function() {
+window.addEventListener("resize", function () {
     app.renderer.resize(window.innerWidth, window.innerHeight);
 });
 
 
 document.body.appendChild(app.view);
-loader.add(["res/white-card.png","../res/1F519.png"]).load(setup);
+loader.add(["res/white-card.png", "../res/1F519.png"]).load(setup);
 
 let fpsCounter = new Text("FPS: ", {fontFamily: 'Arial', fontSize: 20, fill: 0xff1010});
 
@@ -53,15 +53,20 @@ function setup() {
     app.stage.addChild(new PIXI.display.Layer(secondStackGroup));
 
     const texture = resources["res/white-card.png"].texture;
-    const firstStackX = window.innerWidth / 2 - texture.width * 2;
-    const secondStackX = window.innerWidth / 2 + texture.width * 2;
+    const firstStackX = window.innerWidth / 2 - texture.width;
+    const secondStackX = window.innerWidth / 2 + texture.width;
+    let spriteScale = 0.4;
+    if (PIXI.utils.isMobile.any && window.innerHeight > window.innerWidth) {
+        spriteScale *= 1.5;
+    }
 
     for (let i = 0; i < SPRITE_COUNT; i++) {
         let sprite = new Sprite(texture);
         sprite.x = firstStackX;
         sprite.y = window.innerHeight / 1.5 - i * SPRITE_Y_OFFSET;
         sprite.tint = Math.random() * 0xFFFFFF;
-        sprite.anchor = {x: 0.5, y: 0.5};
+        sprite.anchor.set(0.5, 0.5);
+        sprite.scale.set(spriteScale, spriteScale);
 
         animationSprites.push(
             {
@@ -147,12 +152,23 @@ function lerp(a, b, fraction) {
 function createBackButton(stage) {
     const graphics = new PIXI.Graphics();
     const backSprite = new Sprite(resources["../res/1F519.png"].texture);
+    let backButtonRadius = 30;
+    let backSpriteScale = 0.3;
+
+    if (PIXI.utils.isMobile.any && window.innerHeight > window.innerWidth) {
+        backButtonRadius *= 1.75;
+        backSpriteScale *= 1.75;
+    }
+
     graphics.interactive = true;
-    graphics.beginFill(0xffffff, 1);
-    graphics.drawCircle(window.innerWidth - 60, 60, 30);
+    graphics.buttonMode = true;
+    graphics.beginFill(0xadbc43, 1);
+    graphics.lineStyle(3, 0x00, 1);
+    graphics.drawCircle(window.innerWidth - backButtonRadius * 2, backButtonRadius * 2, backButtonRadius);
     graphics.endFill();
     graphics.on('pointerdown', () => window.location.replace("../menu"));
-    backSprite.position.set(window.innerWidth - 60, 60);
+    backSprite.position.set(window.innerWidth - backButtonRadius * 2, backButtonRadius * 2);
+    backSprite.scale.set(backSpriteScale, backSpriteScale);
     backSprite.anchor.set(0.5, 0.5);
     stage.addChild(graphics);
     stage.addChild(backSprite);

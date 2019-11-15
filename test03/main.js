@@ -59,10 +59,10 @@ function setup() {
     app.stage.addChild(container);
 
     logsSprite.position.x = window.innerWidth / 2;
-    logsSprite.position.y = window.innerHeight / 2 + 30;
+    logsSprite.position.y = window.innerHeight / 2 + 70;
 
     container.position.x = window.innerWidth / 2;
-    container.position.y = window.innerHeight / 2;
+    container.position.y = window.innerHeight / 2 + 40;
 
     createBackButton(app.stage);
 
@@ -95,12 +95,23 @@ function calculateFps(delta) {
 function createBackButton(stage) {
     const graphics = new PIXI.Graphics();
     const backSprite = new Sprite(resources["../res/1F519.png"].texture);
+    let backButtonRadius = 30;
+    let backSpriteScale = 0.3;
+
+    if (PIXI.utils.isMobile.any && window.innerHeight > window.innerWidth) {
+        backButtonRadius *= 1.75;
+        backSpriteScale *= 1.75;
+    }
+
     graphics.interactive = true;
-    graphics.beginFill(0xffffff, 1);
-    graphics.drawCircle(window.innerWidth - 60, 60, 30);
+    graphics.buttonMode = true;
+    graphics.beginFill(0xadbc43, 1);
+    graphics.lineStyle(3, 0x00, 1);
+    graphics.drawCircle(window.innerWidth - backButtonRadius * 2, backButtonRadius * 2, backButtonRadius);
     graphics.endFill();
     graphics.on('pointerdown', () => window.location.replace("../menu"));
-    backSprite.position.set(window.innerWidth - 60, 60);
+    backSprite.position.set(window.innerWidth - backButtonRadius * 2, backButtonRadius * 2);
+    backSprite.scale.set(backSpriteScale, backSpriteScale);
     backSprite.anchor.set(0.5, 0.5);
     stage.addChild(graphics);
     stage.addChild(backSprite);

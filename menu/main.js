@@ -34,20 +34,39 @@ function setup() {
     const labels = ["Stacking sprites", "Mixed text and images", "Particles"];
     const paths = ["../test01", "../test02", "../test03"];
 
+    let buttonWidth = 400,
+        buttonHeight = 80,
+        buttonMargin = 40,
+        fontSize = 30;
+
+    if (PIXI.utils.isMobile.any && window.innerHeight > window.innerWidth) {
+        buttonWidth *= 1.5;
+        buttonHeight *= 1.5;
+        buttonMargin *= 1.5;
+        fontSize *= 1.5;
+    }
+
     for (let i = 0; i < 3; i++) {
         const graphics = new PIXI.Graphics();
         graphics.interactive = true;
+        graphics.buttonMode = true;
         graphics.lineStyle(3, 0x00, 1);
         graphics.beginFill(0xadbc43, 0.5);
-        graphics.drawRoundedRect(window.innerWidth / 2, window.innerHeight / 2 + (i-1) * 120, 400, 80, 5);
-        graphics.pivot.set(200, 40);
+        graphics.drawRoundedRect(
+            window.innerWidth / 2,
+            window.innerHeight / 2 + (i - 1) * (buttonHeight + buttonMargin),
+            buttonWidth,
+            buttonHeight,
+            5
+        );
+        graphics.pivot.set(buttonWidth / 2, buttonHeight / 2);
         graphics.endFill();
         graphics.on('pointerdown', () => window.location.replace(paths[i]));
-        let text = new Text(labels[i], {fontFamily: 'Arial', fontSize: 30, fill: 0x000000});
-        text.pivot.set(text.width/2, text.height/2);
-        text.position.set(window.innerWidth / 2, window.innerHeight / 2 + (i-1) * 120);
-        app.stage.addChild(text);
+        let text = new Text(labels[i], {fontFamily: 'Arial', fontSize: fontSize, fill: 0x000000});
+        text.pivot.set(text.width / 2, text.height / 2);
+        text.position.set(window.innerWidth / 2, window.innerHeight / 2 + (i - 1) * (buttonHeight + buttonMargin));
         app.stage.addChild(graphics);
+        app.stage.addChild(text);
     }
 
     app.ticker.add(delta => gameLoop(delta));

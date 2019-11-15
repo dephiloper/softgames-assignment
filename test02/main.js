@@ -26,7 +26,7 @@ const Application = PIXI.Application,
 
 const app = new Application({width: window.innerWidth, height: window.innerHeight, backgroundColor: 0xB4CDCD});
 
-window.addEventListener("resize", function() {
+window.addEventListener("resize", function () {
     app.renderer.resize(window.innerWidth, window.innerHeight);
 });
 
@@ -54,9 +54,9 @@ let container = new Container();
 function setup() {
     app.stage.addChild(fpsCounter);
 
-    refillContainer(container,2, 10, 10);
-    container.position.x = randomValue(0, window.innerWidth - container.width, 40);
-    container.position.y = randomValue(0, window.innerHeight - container.height, 40);
+    refillContainer(container, 2, 8, 10);
+    container.position.x = randomValue(0, window.innerWidth - container.width, 60);
+    container.position.y = randomValue(0, window.innerHeight - container.height, 60);
     app.stage.addChild(container);
 
     createBackButton(app.stage);
@@ -74,7 +74,7 @@ function gameLoop(delta) {
     if (englishWords.length > 0 && emojiFileNames.length > 0) {
 
         if (changeTextTime >= TEXT_VISIBLE_DURATION_MS) {
-            refillContainer(container,2, 10, 10);
+            refillContainer(container, 2, 10, 10);
             container.position.x = randomValue(0, window.innerWidth - container.width, 40);
             container.position.y = randomValue(0, window.innerHeight - container.height, 40);
             changeTextTime = 0;
@@ -109,8 +109,19 @@ function calculateFps(delta) {
 }
 
 function refillContainer(container, minElementCount, maxElementCount, margin) {
+    let elementScale = 0.8,
+        minFontSize = 16,
+        maxFontSize = 36;
+
+    if (PIXI.utils.isMobile.any && window.innerHeight > window.innerWidth) {
+        elementScale = 1;
+        minFontSize *= 1.5;
+        maxFontSize *= 1.5;
+        maxElementCount = maxElementCount > 5 ? 5 : maxElementCount;
+    }
+
     let elementCount = Math.floor(Math.random() * (maxElementCount - minElementCount)) + minElementCount;
-    while(container.children[0]) {
+    while (container.children[0]) {
         container.removeChild(container.children[0]);
     }
 
@@ -121,10 +132,10 @@ function refillContainer(container, minElementCount, maxElementCount, margin) {
         // either create sprite or text both with a probability of 0.5
         if (Math.random() > 0.5) {
             element = new Sprite(resources[emojiFileNames[Math.floor(Math.random() * emojiFileNames.length)]].texture);
-            element.scale.set(0.8, 0.8);
+            element.scale.set(elementScale, elementScale);
         } else {
             element = new Text(englishWords[Math.floor(Math.random() * englishWords.length)]);
-            element.style.fontSize = 10 + Math.floor(Math.random() * 20);
+            element.style.fontSize = minFontSize + Math.floor(Math.random() * (maxFontSize - minFontSize));
         }
 
         // set the anchor of the element to the center of the element
@@ -153,12 +164,23 @@ function randomValue(min, max, bounds) {
 function createBackButton(stage) {
     const graphics = new PIXI.Graphics();
     const backSprite = new Sprite(resources["../res/1F519.png"].texture);
+    let backButtonRadius = 30;
+    let backSpriteScale = 0.3;
+
+    if (PIXI.utils.isMobile.any && window.innerHeight > window.innerWidth) {
+        backButtonRadius *= 1.75;
+        backSpriteScale *= 1.75;
+    }
+
     graphics.interactive = true;
-    graphics.beginFill(0xffffff, 1);
-    graphics.drawCircle(window.innerWidth - 60, 60, 30);
+    graphics.buttonMode = true;
+    graphics.beginFill(0xadbc43, 1);
+    graphics.lineStyle(3, 0x00, 1);
+    graphics.drawCircle(window.innerWidth - backButtonRadius * 2, backButtonRadius * 2, backButtonRadius);
     graphics.endFill();
     graphics.on('pointerdown', () => window.location.replace("../menu"));
-    backSprite.position.set(window.innerWidth - 60, 60);
+    backSprite.position.set(window.innerWidth - backButtonRadius * 2, backButtonRadius * 2);
+    backSprite.scale.set(backSpriteScale, backSpriteScale);
     backSprite.anchor.set(0.5, 0.5);
     stage.addChild(graphics);
     stage.addChild(backSprite);
