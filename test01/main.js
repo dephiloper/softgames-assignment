@@ -35,7 +35,7 @@ window.addEventListener("resize", function() {
 
 
 document.body.appendChild(app.view);
-loader.add("res/white-card.png").load(setup);
+loader.add(["res/white-card.png","../res/1F519.png"]).load(setup);
 
 let fpsCounter = new Text("FPS: ", {fontFamily: 'Arial', fontSize: 20, fill: 0xff1010});
 
@@ -43,6 +43,7 @@ const firstStackGroup = new PIXI.display.Group(0, true);
 const secondStackGroup = new PIXI.display.Group(1, true);
 
 let animationSprites = [];
+
 function setup() {
     app.stage = new PIXI.display.Stage();
     app.stage.addChild(fpsCounter);
@@ -79,6 +80,8 @@ function setup() {
         sprite.parentGroup = firstStackGroup;
         app.stage.addChild(sprite);
     }
+
+    createBackButton(app.stage);
 
     app.ticker.add(delta => gameLoop(delta));
 }
@@ -137,4 +140,18 @@ function lerp(a, b, fraction) {
     fraction = fraction < 0 ? 0 : fraction;
     fraction = fraction > 1 ? 1 : fraction;
     return a + (b - a) * fraction;
+}
+
+function createBackButton(stage) {
+    const graphics = new PIXI.Graphics();
+    const backSprite = new Sprite(resources["../res/1F519.png"].texture);
+    graphics.interactive = true;
+    graphics.beginFill(0xffffff, 1);
+    graphics.drawCircle(window.innerWidth - 60, 60, 30);
+    graphics.endFill();
+    graphics.on('pointerdown', () => window.location.replace("../menu"));
+    backSprite.position.set(window.innerWidth - 60, 60);
+    backSprite.anchor.set(0.5, 0.5);
+    stage.addChild(graphics);
+    stage.addChild(backSprite);
 }

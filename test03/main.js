@@ -33,7 +33,7 @@ fetch('res/particle-emitter-config.json')
     .then(response => response.json())
     .then(json => {
         emitterConfig = json;
-        loader.add("res/logs.png").load(setup);
+        loader.add(["res/logs.png", "../res/1F519.png"]).load(setup);
     });
 
 const container = new Container();
@@ -62,6 +62,8 @@ function setup() {
     container.position.x = window.innerWidth / 2;
     container.position.y = window.innerHeight / 2;
 
+    createBackButton(app.stage);
+
     app.ticker.add(delta => gameLoop(delta));
     emitter.emit = true;
 }
@@ -86,4 +88,18 @@ function gameLoop(delta) {
 
 function calculateFps(delta) {
     return 1000 / (delta / PIXI.settings.TARGET_FPMS);
+}
+
+function createBackButton(stage) {
+    const graphics = new PIXI.Graphics();
+    const backSprite = new Sprite(resources["../res/1F519.png"].texture);
+    graphics.interactive = true;
+    graphics.beginFill(0xffffff, 1);
+    graphics.drawCircle(window.innerWidth - 60, 60, 30);
+    graphics.endFill();
+    graphics.on('pointerdown', () => window.location.replace("../menu"));
+    backSprite.position.set(window.innerWidth - 60, 60);
+    backSprite.anchor.set(0.5, 0.5);
+    stage.addChild(graphics);
+    stage.addChild(backSprite);
 }

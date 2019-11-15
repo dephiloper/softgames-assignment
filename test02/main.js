@@ -43,7 +43,7 @@ fetch('res/openmoji-list.txt')
     .then(response => response.text())
     .then(text => {
         emojiFileNames = textToList(text, 50);
-        loader.add(emojiFileNames).load(setup);
+        loader.add([emojiFileNames, "../res/1F519.png"]).load(setup);
     });
 
 let fpsCounter = new Text("FPS: ", {fontFamily: 'Arial', fontSize: 20, fill: 0xff1010});
@@ -56,6 +56,9 @@ function setup() {
     container.position.x = randomValue(0, window.innerWidth - container.width, 40);
     container.position.y = randomValue(0, window.innerHeight - container.height, 40);
     app.stage.addChild(container);
+
+    createBackButton(app.stage);
+
     app.ticker.add(delta => gameLoop(delta));
 }
 
@@ -143,4 +146,18 @@ function randomValue(min, max, bounds) {
     min = min + bounds;
     max = max - bounds;
     return min + Math.floor(Math.random() * (max - min));
+}
+
+function createBackButton(stage) {
+    const graphics = new PIXI.Graphics();
+    const backSprite = new Sprite(resources["../res/1F519.png"].texture);
+    graphics.interactive = true;
+    graphics.beginFill(0xffffff, 1);
+    graphics.drawCircle(window.innerWidth - 60, 60, 30);
+    graphics.endFill();
+    graphics.on('pointerdown', () => window.location.replace("../menu"));
+    backSprite.position.set(window.innerWidth - 60, 60);
+    backSprite.anchor.set(0.5, 0.5);
+    stage.addChild(graphics);
+    stage.addChild(backSprite);
 }
