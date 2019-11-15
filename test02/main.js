@@ -6,11 +6,21 @@
  * random font size.
  */
 
-import {UPDATE_FPS_COUNTER, Application, Text, Sprite, Container, resources, loader, calculateFps, createBackButton}
+import {
+    UPDATE_FPS_COUNTER,
+    Application,
+    Text,
+    Sprite,
+    Container,
+    resources,
+    loader,
+    calculateFps,
+    createBackButton,
+    isMobile
+}
     from "../utils.js";
 
 const TEXT_VISIBLE_DURATION_MS = 2000;
-
 const app = new Application({width: window.innerWidth, height: window.innerHeight, backgroundColor: 0xB4CDCD});
 
 window.addEventListener("resize", function () {
@@ -22,28 +32,29 @@ let emojiFileNames = [];
 
 document.body.appendChild(app.view);
 
+// read random english words from a given file
 fetch('res/english_words_10000.txt')
     .then(response => response.text())
     .then(text => {
-        englishWords = textToList(text, 200)
+        englishWords = shuffleReadToList(text, 200)
     });
 
+// get names of random emojis and load them into the app
 fetch('res/openmoji-list.txt')
     .then(response => response.text())
     .then(text => {
-        emojiFileNames = textToList(text, 50);
+        emojiFileNames = shuffleReadToList(text, 50);
         loader.add([emojiFileNames, "../res/1F519.png"]).load(setup);
     });
 
 let fpsCounter = new Text("FPS: ", {fontFamily: 'Arial', fontSize: 20, fill: 0xff1010});
-let container = new Container();
+let configContainer = new Container();
 function setup() {
     app.stage.addChild(fpsCounter);
-
-    refillContainer(container, 2, 8, 10);
-    container.position.x = randomValue(0, window.innerWidth - container.width, 60);
-    container.position.y = randomValue(0, window.innerHeight - container.height, 60);
-    app.stage.addChild(container);
+    refillContainer(configContainer, 2, 8, 10);
+    configContainer.position.x = randomValue(0, window.innerWidth - configContainer.width, 60);
+    configContainer.position.y = randomValue(0, window.innerHeight - configContainer.height, 60);
+    app.stage.addChild(configContainer);
 
     createBackButton(app.stage);
 
@@ -51,19 +62,17 @@ function setup() {
 }
 
 let frameCount = 0;
-let changeTextTime = 0;
+let changeConfigurationTime = 0;
 function gameLoop(delta) {
     frameCount++;
-    changeTextTime += delta / PIXI.settings.TARGET_FPMS;
+    changeConfigurationTime += delta / PIXI.settings.TARGET_FPMS;
 
-    if (englishWords.length > 0 && emojiFileNames.length > 0) {
-
-        if (changeTextTime >= TEXT_VISIBLE_DURATION_MS) {
-            refillContainer(container, 2, 10, 10);
-            container.position.x = randomValue(0, window.innerWidth - container.width, 40);
-            container.position.y = randomValue(0, window.innerHeight - container.height, 40);
-            changeTextTime = 0;
-        }
+    // change configuration after defined time
+    if (changeConfigurationTime >= TEXT_VISIBLE_DURATION_MS) {
+        refillContainer(configContainer, 2, 10, 10);
+        configContainer.position.x = randomValue(0, window.innerWidth - configContainer.width, 40);
+        configContainer.position.y = randomValue(0, window.innerHeight - configContainer.height, 40);
+        changeConfigurationTime = 0;
     }
 
     // every n frames update fps counter
@@ -73,7 +82,13 @@ function gameLoop(delta) {
     }
 }
 
-function textToList(text, amount) {
+/**
+ * Reads given amount of random lines into an list.
+ * @param text multiline text
+ * @param amount max boundary for the amount of lines
+ * @returns {[]} list of n random lines
+ */
+function shuffleReadToList(text, amount) {
     const lines = text.split(/\r\n|\n/);
     let list = [];
     for (let i = 0; i < amount; i++) {
@@ -88,12 +103,19 @@ function textToList(text, amount) {
     return list;
 }
 
+/**
+ * Creating configuration with random amount of images and texts in random order.
+ * @param container object to refill
+ * @param minElementCount min count of elements stacked in horizontal order
+ * @param maxElementCount min count of elements stacked in horizontal order
+ * @param margin width between single objects
+ */
 function refillContainer(container, minElementCount, maxElementCount, margin) {
     let elementScale = 0.8,
         minFontSize = 16,
         maxFontSize = 36;
 
-    if (PIXI.utils.isMobile.any && window.innerHeight > window.innerWidth) {
+    if (isMobile()) {
         elementScale = 1;
         minFontSize *= 1.5;
         maxFontSize *= 1.5;
@@ -134,6 +156,13 @@ function refillContainer(container, minElementCount, maxElementCount, margin) {
     }
 }
 
+/**
+ * Generated random value between two given values.
+ * @param min boundary min value
+ * @param max boundary max value
+ * @param bounds additional bounds added to the given min and max
+ * @returns {*} random value
+ */
 function randomValue(min, max, bounds) {
     console.assert(min < max);
     min = min + bounds;

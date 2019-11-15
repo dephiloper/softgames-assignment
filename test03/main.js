@@ -16,7 +16,7 @@ window.addEventListener("resize", function () {
 
 document.body.appendChild(app.view);
 
-
+// read particle emitter config
 fetch('res/particle-emitter-config.json')
     .then(response => response.json())
     .then(json => {
@@ -35,6 +35,7 @@ function setup() {
     logsSprite.anchor.set(0.5, 0.5);
     logsSprite.scale.set(0.6, 0.6);
 
+    // setup emitter
     emitter = new PIXI.particles.Emitter(
         container,
         ["res/particle.png", "res/fire.png"],
@@ -58,6 +59,7 @@ function setup() {
 
 let frameCount = 0;
 let elapsed = Date.now();
+
 function gameLoop(delta) {
     frameCount++;
 

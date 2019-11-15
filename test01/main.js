@@ -6,8 +6,8 @@
  * number of fps in left top corner and make sure, that this demo runs well on mobile devices.
  */
 
-import {UPDATE_FPS_COUNTER, Application, Text, Sprite, resources, loader, calculateFps, createBackButton, lerp}
-from "../utils.js";
+import {UPDATE_FPS_COUNTER, Application, Text, Sprite, resources, loader, calculateFps, createBackButton, lerp, isMobile}
+    from "../utils.js";
 
 const SPRITE_COUNT = 144;
 const SPRITE_Y_OFFSET = 1.0;
@@ -30,6 +30,7 @@ const secondStackGroup = new PIXI.display.Group(1, true);
 
 let fpsCounter = new Text("FPS: ", {fontFamily: 'Arial', fontSize: 20, fill: 0xff1010});
 let animationSprites = [];
+
 function setup() {
     app.stage = new PIXI.display.Stage();
     app.stage.addChild(fpsCounter);
@@ -39,10 +40,7 @@ function setup() {
     const texture = resources["res/white-card.png"].texture;
     const firstStackX = window.innerWidth / 2 - texture.width;
     const secondStackX = window.innerWidth / 2 + texture.width;
-    let spriteScale = 0.4;
-    if (PIXI.utils.isMobile.any && window.innerHeight > window.innerWidth) {
-        spriteScale *= 1.5;
-    }
+    let spriteScale = isMobile() ? 0.6 : 0.4;
 
     for (let i = 0; i < SPRITE_COUNT; i++) {
         let sprite = new Sprite(texture);
@@ -52,6 +50,7 @@ function setup() {
         sprite.anchor.set(0.5, 0.5);
         sprite.scale.set(spriteScale, spriteScale);
 
+        // define object for sprites to animate with start and end position
         animationSprites.push(
             {
                 sprite: sprite,
@@ -63,7 +62,7 @@ function setup() {
                 positionEnd:
                     {
                         x: secondStackX,
-                        y: window.innerHeight / 1.5 - (SPRITE_COUNT - 1 - i) * SPRITE_Y_OFFSET
+                        y: window.innerHeight / 1.5 - (SPRITE_COUNT - 1 - i) * SPRITE_Y_OFFSET // for reversed order
                     },
                 animationTime: 0.0
             });
@@ -81,6 +80,7 @@ let frameCount = 0;
 let currentSpriteIndex = 0;
 let popSpriteTime = 0;
 let activeSprites = [];
+
 function gameLoop(delta) {
     frameCount++;
     popSpriteTime += delta / PIXI.settings.TARGET_FPMS;
