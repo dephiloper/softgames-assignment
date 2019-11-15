@@ -14,6 +14,8 @@ if (!PIXI.utils.isWebGLSupported()) {
     type = "canvas";
 }
 
+PIXI.utils.sayHello(type);
+
 //Aliases
 const Application = PIXI.Application,
     loader = PIXI.Loader.shared,
