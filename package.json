@@ -2,7 +2,7 @@
   "name": "softgames-assignment",
   "version": "1.0.0",
   "description": "Assignment for application at SOFTGAMES.",
-  "main": "test01/index.html",
+  "main": "menu/index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "http-server"
@@ -15,6 +15,9 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/dephiloper/assignment-softgames/issues"
+  },
+  "engines": {
+    "node": "13.x"
   },
   "homepage": "https://github.com/dephiloper/assignment-softgames#readme",
   "dependencies": {
