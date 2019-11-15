@@ -37,7 +37,7 @@ window.addEventListener("resize", function() {
 
 
 document.body.appendChild(app.view);
-loader.add(["https://media.githubusercontent.com/media/dephiloper/assignment-softgames/gh-pages/test01/res/white-card.png","../res/1F519.png"]).load(setup);
+loader.add(["res/white-card.png","../res/1F519.png"]).load(setup);
 
 let fpsCounter = new Text("FPS: ", {fontFamily: 'Arial', fontSize: 20, fill: 0xff1010});
 
