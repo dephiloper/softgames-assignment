@@ -2,10 +2,9 @@
   "name": "softgames-assignment",
   "version": "1.0.0",
   "description": "Assignment for application at SOFTGAMES.",
-  "main": "menu/index.html",
+  "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "http-server"
+   "start": "node index.html"
   },
   "repository": {
     "type": "git",
