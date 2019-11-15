@@ -1,9 +1,6 @@
 /**
  * @author Philipp Bönsch
- * @description Create 144 sprites (NOT graphics object) that are stacked on each other like cards in a deck (so object
- * above covers bottom one, but not completely). Every second 1 object from top of stack goes to other stack -
- * animation of moving should be 2 seconds long. So at the end of whole process you should have reversed stack. Display
- * number of fps in left top corner and make sure, that this demo runs well on mobile devices.
+ * @description The test is split in 3 parts which should be accessed through an in-game menu.
  */
 
 // so the fps counter is not updated very frame
@@ -104,7 +101,6 @@ function gameLoop(delta) {
         }
     }
 
-    // move all currently active sprites from their start to end position
     for (let activeSprite of activeSprites) {
         activeSprite.animationTime += delta / PIXI.settings.TARGET_FPMS;
 

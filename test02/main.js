@@ -1,7 +1,9 @@
-/*
- * Create a tool that will allow mixed text and images in an easy way (for example displaying text with emoticons or
- * prices with money icon). It should come up every 2 seconds a random text with images in random configuration
- * (image + text + image, image + image + image, image + image + text, text + image + text etc) and a random font size.
+/**
+ * @author Philipp Bönsch
+ * @description Create a tool that will allow mixed text and images in an easy way (for example displaying text with
+ * emoticons or prices with money icon). It should come up every 2 seconds a random text with images in random
+ * configuration (image + text + image, image + image + image, image + image + text, text + image + text etc) and a
+ * random font size.
  */
 
 const UPDATE_FPS_COUNTER = 5;
@@ -22,8 +24,6 @@ const Application = PIXI.Application,
 
 const app = new Application({width: window.innerWidth, height: window.innerHeight, backgroundColor: 0xB4CDCD});
 
-// Fullscreen in pixi is resizing the renderer to be window.innerWidth by window.innerHeight
-// https://codepen.io/iamnotsam/pen/RgeOrK
 window.addEventListener("resize", function() {
     app.renderer.resize(window.innerWidth, window.innerHeight);
 });
@@ -50,7 +50,6 @@ let fpsCounter = new Text("FPS: ", {fontFamily: 'Arial', fontSize: 20, fill: 0xf
 let container = new Container();
 
 function setup() {
-    app.stage = new PIXI.display.Stage();
     app.stage.addChild(fpsCounter);
 
     refillContainer(container,2, 10, 10);
