@@ -3,8 +3,6 @@
  * @description The test is split in 3 parts which should be accessed through an in-game menu.
  */
 
-import * as PIXI from "pixi.js";
-
 // so the fps counter is not updated very frame
 const UPDATE_FPS_COUNTER = 5;
 
